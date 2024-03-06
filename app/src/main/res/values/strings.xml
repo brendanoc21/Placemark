@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Placemark</string>
+    <string name="hello_message">Hello World!</string>
 </resources>
