@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.placemark.databinding.ActivityPlacemarkBinding
+import ie.setu.placemark.main.MainApp
 import ie.setu.placemark.models.PlacemarkModel
 import timber.log.Timber
 import timber.log.Timber.i
@@ -12,7 +13,7 @@ class PlacemarkActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlacemarkBinding
     var placemark = PlacemarkModel()
-    val placemarks = ArrayList<PlacemarkModel>()
+    lateinit var app: MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +21,7 @@ class PlacemarkActivity : AppCompatActivity() {
         binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Timber.plant(Timber.DebugTree())
-
+        app = application as MainApp
         i("Placemark Activity started...")
 
         binding.btnAdd.setOnClickListener() {
@@ -29,8 +29,10 @@ class PlacemarkActivity : AppCompatActivity() {
             placemark.description = binding.placemarkDescription.text.toString()
             if (placemark.title.isNotEmpty() && placemark.description.isNotEmpty()) {
                 i("add Button Pressed: ${placemark.title}, ${placemark.description}")
-                placemarks.add(placemark.copy())
-                i("${placemarks}")
+                app.placemarks.add(placemark.copy())
+                for (i in app.placemarks.indices) {
+                    i("Placemark[$i]:${app.placemarks[i]}")
+                }
             }
             else {
                 Snackbar
