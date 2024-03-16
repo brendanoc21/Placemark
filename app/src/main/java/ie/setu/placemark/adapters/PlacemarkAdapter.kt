@@ -3,6 +3,7 @@ package ie.setu.placemark.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ie.setu.placemark.databinding.CardPlacemarkBinding
 import ie.setu.placemark.models.PlacemarkModel
 
@@ -33,7 +34,8 @@ class PlacemarkAdapter constructor(private var placemarks: List<PlacemarkModel>,
         fun bind(placemark: PlacemarkModel, listener: PlacemarkListener) {
             binding.placemarkTitle.text = placemark.title
             binding.placemarkDescription.text = placemark.description
-            binding.root.setOnClickListener { listener.onPlacemarkClick(placemark)}
+            Picasso.get().load(placemark.image).resize(200,200).into(binding.imageIcon)
+            binding.root.setOnClickListener { listener.onPlacemarkClick(placemark) }
         }
     }
 }
