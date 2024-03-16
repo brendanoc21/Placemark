@@ -2,7 +2,10 @@ package ie.setu.placemark.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
+import ie.setu.placemark.R
 import ie.setu.placemark.databinding.ActivityPlacemarkBinding
 import ie.setu.placemark.main.MainApp
 import ie.setu.placemark.models.PlacemarkModel
@@ -21,37 +24,43 @@ class PlacemarkActivity : AppCompatActivity() {
         binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.topAppBar.title = title
+        setSupportActionBar(binding.topAppBar)
+
         app = application as MainApp
         i("Placemark Activity started...")
 
         binding.btnAdd.setOnClickListener() {
             placemark.title = binding.placemarkTitle.text.toString()
             placemark.description = binding.placemarkDescription.text.toString()
-            if (placemark.title.isNotEmpty() && placemark.description.isNotEmpty()) {
-                i("add Button Pressed: ${placemark.title}, ${placemark.description}")
+            if (placemark.title.isNotEmpty()) {
                 app.placemarks.add(placemark.copy())
+                i("add Button Pressed: ${placemark}")
                 for (i in app.placemarks.indices) {
-                    i("Placemark[$i]:${app.placemarks[i]}")
+                    i("Placemark[$i]:${this.app.placemarks[i]}")
                 }
+                setResult(RESULT_OK)
+                finish()
             }
             else {
-                Snackbar
-                    .make(it,"Please Enter a title and description", Snackbar.LENGTH_LONG)
+                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
     }
-}
-        /*
-        binding.themeButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                Toast.makeText(applicationContext, "Dark Mode", Toast.LENGTH_LONG).show()
-                i("Dark Mode active")
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                Toast.makeText(applicationContext, "Light Mode", Toast.LENGTH_LONG).show()
-                i("Light mode active")
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_placemark, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_cancel -> {
+                setResult(RESULT_CANCELED)
+                finish()
             }
         }
-        */
+        return super.onOptionsItemSelected(item)
+    }
+}
