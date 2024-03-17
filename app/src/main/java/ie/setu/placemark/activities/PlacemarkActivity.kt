@@ -14,6 +14,7 @@ import ie.setu.placemark.R
 import ie.setu.placemark.databinding.ActivityPlacemarkBinding
 import ie.setu.placemark.helpers.showImagePicker
 import ie.setu.placemark.main.MainApp
+import ie.setu.placemark.models.Location
 import ie.setu.placemark.models.PlacemarkModel
 import timber.log.Timber
 import timber.log.Timber.i
@@ -23,6 +24,8 @@ class PlacemarkActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlacemarkBinding
     var placemark = PlacemarkModel()
     lateinit var app: MainApp
+
+    var location = Location(52.245696, -7.139102, 15f)
 
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
 
@@ -46,6 +49,25 @@ class PlacemarkActivity : AppCompatActivity() {
             }
     }
 
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            location = result.data!!.extras?.getParcelable("location")!!
+                            i("Location == $location")
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,7 +82,13 @@ class PlacemarkActivity : AppCompatActivity() {
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+
         registerImagePickerCallback()
+        registerMapCallback()
+
+        binding.placemarkLocation.setOnClickListener {
+            i ("Set Location Pressed")
+        }
 
         app = application as MainApp
         i("Placemark Activity started...")
@@ -104,6 +132,12 @@ class PlacemarkActivity : AppCompatActivity() {
                 Snackbar.make(it, getString(R.string.enter_placemark_title),
                     Snackbar.LENGTH_LONG).show()
             }
+        }
+
+        binding.placemarkLocation.setOnClickListener {
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
+            mapIntentLauncher.launch(launcherIntent)
         }
     }
 
