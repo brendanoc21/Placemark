@@ -35,7 +35,12 @@ class PlacemarkActivity : AppCompatActivity() {
                     RESULT_OK -> {
                         if (result.data != null) {
                             i("Got Result ${result.data!!.data}")
-                            placemark.image = result.data!!.data!!
+
+                            val image = result.data!!.data!!
+                            contentResolver.takePersistableUriPermission(image,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            placemark.image = image
+
                             Picasso.get()
                                 .load(placemark.image)
                                 .into(binding.placemarkImage)
@@ -81,7 +86,7 @@ class PlacemarkActivity : AppCompatActivity() {
         setSupportActionBar(binding.topAppBar)
 
         binding.chooseImage.setOnClickListener {
-            showImagePicker(imageIntentLauncher)
+            showImagePicker(imageIntentLauncher,this)
         }
 
         registerImagePickerCallback()
