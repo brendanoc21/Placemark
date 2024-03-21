@@ -100,13 +100,6 @@ class PlacemarkActivity : AppCompatActivity() {
         i("Placemark Activity started...")
 
         if (intent.hasExtra("placemark_edit")) {
-            placemark = intent.extras?.getParcelable("placemark_edit")!!
-            binding.placemarkTitle.setText(placemark.title)
-            binding.placemarkDescription.setText(placemark.description)
-            binding.btnAdd.setText(R.string.save_placemark)
-        }
-
-        if (intent.hasExtra("placemark_edit")) {
             edit = true
             placemark = intent.extras?.getParcelable("placemark_edit")!!
             binding.placemarkTitle.setText(placemark.title)
