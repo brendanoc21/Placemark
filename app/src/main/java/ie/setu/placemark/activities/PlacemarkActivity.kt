@@ -24,6 +24,7 @@ class PlacemarkActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlacemarkBinding
     var placemark = PlacemarkModel()
     lateinit var app: MainApp
+    var edit= false
 
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
 
@@ -76,8 +77,6 @@ class PlacemarkActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        var edit = false
 
         binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -148,6 +147,7 @@ class PlacemarkActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_placemark, menu)
+        if (edit) menu.getItem(0).isVisible = true
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -155,6 +155,11 @@ class PlacemarkActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.item_cancel -> {
                 setResult(RESULT_CANCELED)
+                finish()
+            }
+            R.id.item_delete -> {
+                app.placemarks.delete(placemark)
+                setResult(99)
                 finish()
             }
         }

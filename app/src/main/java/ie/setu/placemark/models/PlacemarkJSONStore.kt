@@ -42,7 +42,8 @@ class PlacemarkJSONStore(private val context: Context) : PlacemarkStore {
 
 
     override fun update(placemark: PlacemarkModel) {
-        val foundPlacemark: PlacemarkModel? = placemarks.find { p -> p.id == placemark.id }
+        val placemarksList = findAll() as ArrayList<PlacemarkModel>
+        val foundPlacemark: PlacemarkModel? = placemarksList.find { p -> p.id == placemark.id }
         if (foundPlacemark != null) {
             foundPlacemark.title = placemark.title
             foundPlacemark.description = placemark.description
@@ -50,8 +51,8 @@ class PlacemarkJSONStore(private val context: Context) : PlacemarkStore {
             foundPlacemark.lat = placemark.lat
             foundPlacemark.lng = placemark.lng
             foundPlacemark.zoom = placemark.zoom
-            serialize()
         }
+        serialize()
     }
 
     override fun delete(placemark: PlacemarkModel) {

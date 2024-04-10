@@ -20,10 +20,12 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
 
     lateinit var app: MainApp
     private lateinit var binding: ActivityPlacemarkListBinding
+    private var position: Int = 0
 
-    override fun onPlacemarkClick(placemark: PlacemarkModel) {
+    override fun onPlacemarkClick(placemark: PlacemarkModel, pos : Int) {
         val launcherIntent = Intent(this, PlacemarkActivity::class.java)
         launcherIntent.putExtra("placemark_edit", placemark)
+        position = pos
         getResult.launch(launcherIntent)
     }
 
@@ -61,12 +63,17 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.placemarks.findAll().size)
-            }
-            if (it.resultCode == Activity.RESULT_CANCELED) {
-                Snackbar.make(binding.root, "Placemark Add Cancelled", Snackbar.LENGTH_LONG).show()
+            when(it.resultCode) {
+                Activity.RESULT_OK ->
+                    (binding.recyclerView.adapter)?.notifyItemRangeChanged(
+                        0,
+                        app.placemarks.findAll().size)
+                Activity.RESULT_CANCELED ->
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.menu_cancelPlacemark), Snackbar.LENGTH_LONG).show()
+                99 ->
+                    (binding.recyclerView.adapter)?.notifyItemRemoved(position)
             }
         }
 }
