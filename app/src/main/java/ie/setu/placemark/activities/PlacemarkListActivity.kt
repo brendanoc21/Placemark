@@ -22,6 +22,11 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
     private lateinit var binding: ActivityPlacemarkListBinding
     private var position: Int = 0
 
+    private val mapIntentLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        )    { }
+
     override fun onPlacemarkClick(placemark: PlacemarkModel, pos : Int) {
         val launcherIntent = Intent(this, PlacemarkActivity::class.java)
         launcherIntent.putExtra("placemark_edit", placemark)
@@ -54,6 +59,10 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
             R.id.item_add -> {
                 val launcherIntent = Intent(this, PlacemarkActivity::class.java)
                 getResult.launch(launcherIntent)
+            }
+            R.id.item_map -> {
+                val launcherIntent = Intent(this, PlacemarkMapsActivity::class.java)
+                mapIntentLauncher.launch(launcherIntent)
             }
         }
         return super.onOptionsItemSelected(item)
