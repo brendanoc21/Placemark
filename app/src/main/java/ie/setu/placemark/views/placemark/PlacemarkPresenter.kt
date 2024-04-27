@@ -17,7 +17,6 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
 
     var placemark = PlacemarkModel()
     var app: MainApp = view.application as MainApp
-    var binding: ActivityPlacemarkBinding = ActivityPlacemarkBinding.inflate(view.layoutInflater)
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     var edit = false;

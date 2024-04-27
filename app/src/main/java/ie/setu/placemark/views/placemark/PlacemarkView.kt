@@ -38,16 +38,6 @@ class PlacemarkView : AppCompatActivity() {
             presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.placemarkDescription.text.toString())
             presenter.doSetLocation()
         }
-
-        binding.btnAdd.setOnClickListener {
-            if (binding.placemarkTitle.text.toString().isEmpty()) {
-                Snackbar.make(binding.root, R.string.enter_placemark_title, Snackbar.LENGTH_LONG)
-                    .show()
-            } else {
-                // presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
-                presenter.doAddOrSave(binding.placemarkTitle.text.toString(), binding.placemarkDescription.text.toString())
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -59,6 +49,14 @@ class PlacemarkView : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.item_add -> {
+                if (binding.placemarkTitle.text.toString().isEmpty()) {
+                    Snackbar.make(binding.root, R.string.enter_placemark_title, Snackbar.LENGTH_LONG)
+                        .show()
+                } else {
+                    presenter.doAddOrSave(binding.placemarkTitle.text.toString(), binding.placemarkDescription.text.toString())
+                }
+            }
             R.id.item_delete -> {
                 presenter.doDelete()
             }
@@ -72,7 +70,6 @@ class PlacemarkView : AppCompatActivity() {
     fun showPlacemark(placemark: PlacemarkModel) {
         binding.placemarkTitle.setText(placemark.title)
         binding.placemarkDescription.setText(placemark.description)
-        binding.btnAdd.setText(R.string.save_placemark)
         Picasso.get()
             .load(placemark.image)
             .into(binding.placemarkImage)
